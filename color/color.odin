@@ -5,15 +5,23 @@ import "core:fmt"
 ResetAll :: 0
 
 ColorANSI :: enum {
-    Black   = 30,
-    Red     = 31,
-    Green   = 32,
-    Yellow  = 33,
-    Blue    = 34,
-    Magenta = 35,
-    Cyan    = 36,
-    White   = 37,
-    Default = 39,
+    Black         = 30,
+    Red           = 31,
+    Green         = 32,
+    Yellow        = 33,
+    Blue          = 34,
+    Magenta       = 35,
+    Cyan          = 36,
+    White         = 37,
+    Default       = 39,
+    BrightBlack   = 90,
+    BrightRed     = 91,
+    BrightGreen   = 92,
+    BrightYellow  = 93,
+    BirhgtBlue    = 94,
+    BrightMagenta = 95,
+    BrightCyan    = 96,
+    BrightWhite   = 97,
 }
 
 Color256 :: distinct u8
@@ -34,12 +42,8 @@ fg :: proc {
     fg_rgb,
 }
 
-fg_ansi :: proc(s: string, c: ColorANSI, bright := false) -> string {
-    id := int(c)
-    if bright {
-        id += 60
-    }
-    return fmt.tprintf(F_ANSI, id, s, Reset)
+fg_ansi :: proc(s: string, c: ColorANSI) -> string {
+    return fmt.tprintf(F_ANSI, c, s, Reset)
 }
 
 fg_256 :: proc(s: string, c: Color256) -> string {
@@ -56,12 +60,8 @@ bg :: proc {
     bg_rgb,
 }
 
-bg_ansi :: proc(s: string, c: ColorANSI, bright := false) -> string {
-    id := int(c) + 10
-    if bright {
-        id += 60
-    }
-    return fmt.tprintf(F_ANSI, id, s, Reset)
+bg_ansi :: proc(s: string, c: ColorANSI) -> string {
+    return fmt.tprintf(F_ANSI, int(c) + 10, s, Reset)
 }
 
 bg_256 :: proc(s: string, c: Color256) -> string {
