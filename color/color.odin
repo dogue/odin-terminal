@@ -28,41 +28,46 @@ Color :: union #no_nil {
 
 Reset :: int(ColorANSI.Default)
 
-
-fg :: proc(s: string, c: Color, bright := false) -> (res: string) {
-    switch t in c {
-    case ColorANSI:
-        id := int(t)
-        if bright {
-            id += 60
-        }
-        res = fmt.tprintf(F_ANSI, id, s, Reset)
-
-    case Color256:
-        res = fmt.tprintf(F_256, FG_256, t, s, Reset)
-
-    case ColorRGB:
-        res = fmt.tprintf(F_RGB, FG_RGB, t.r, t.g, t.b, s, Reset)
-    }
-
-    return
+fg :: proc {
+    fg_ansi,
+    fg_256,
+    fg_rgb,
 }
 
-bg :: proc(s: string, c: Color, bright := false) -> (res: string) {
-    switch t in c {
-    case ColorANSI:
-        id := int(t) + 10
-        if bright {
-            id += 60
-        }
-        res = fmt.tprintf(F_ANSI, id, s, Reset)
-
-    case Color256:
-        res := fmt.tprintf(F_256, BG_256, t, s, Reset)
-
-    case ColorRGB:
-        res := fmt.tprintf(F_RGB, BG_RGB, t.r, t.g, t.b, s, Reset)
+fg_ansi :: proc(s: string, c: ColorANSI, bright := false) -> string {
+    id := int(c)
+    if bright {
+        id += 60
     }
+    return fmt.tprintf(F_ANSI, id, s, Reset)
+}
 
-    return
+fg_256 :: proc(s: string, c: Color256) -> string {
+    return fmt.tprintf(F_256, FG_256, c, s, Reset)
+}
+
+fg_rgb :: proc(s: string, c: ColorRGB) -> string {
+    return fmt.tprintf(F_RGB, FG_RGB, c.r, c.g, c.b, s, Reset)
+}
+
+bg :: proc {
+    bg_ansi,
+    bg_256,
+    bg_rgb,
+}
+
+bg_ansi :: proc(s: string, c: ColorANSI, bright := false) -> string {
+    id := int(c) + 10
+    if bright {
+        id += 60
+    }
+    return fmt.tprintf(F_ANSI, id, s, Reset)
+}
+
+bg_256 :: proc(s: string, c: Color256) -> string {
+    return fmt.tprintf(F_256, BG_256, c, s, Reset)
+}
+
+bg_rgb :: proc(s: string, c: ColorRGB) -> string {
+    return fmt.tprintf(F_RGB, BG_RGB, c.r, c.g, c.b, s, Reset)
 }
